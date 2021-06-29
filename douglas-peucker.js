@@ -33,7 +33,7 @@ function douglasPeucker(points, epsilon = 10, start, end) {
         }
     }
 
-    if (dmax > epsilon * epsilon) {
+    if (Math.sqrt(dmax) > epsilon) {
         let r1 = douglasPeucker(points, epsilon, start, index);
         let r2 = douglasPeucker(points, epsilon, index, end);
         r1.pop();
