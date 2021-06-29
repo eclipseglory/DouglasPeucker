@@ -13,6 +13,14 @@ function douglasPeucker(points, epsilon = 10, start, end) {
     }
     start = start == null ? 0 : start;
     end = end == null ? points.length - 1 : end;
+    if (start < 0 || end < 0) return;
+    if (end - start < 2) {
+        let r = [];
+        for (let i = start; i <= end; i++) {
+            r.push([points[i][0], points[i][1]])
+        }
+        return r;
+    }
     let dmax = -Infinity;
     let index = -1;
     let v = new _Vector(points[end][0] - points[start][0], points[end][1] - points[start][1]);
