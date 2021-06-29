@@ -6,18 +6,19 @@
  * @param {Number} start
  * @param {Number} end
  */
-function douglasPeucker(points, epsilon = 0, start, end) {
+function douglasPeucker(points, epsilon = 10, start, end) {
+    if (!points || points.length == 0) return;
+    if (points.length < 3) {
+        return points.map((v) => [v[0], v[1]]);
+    }
     start = start == null ? 0 : start;
     end = end == null ? points.length - 1 : end;
-    if (end - start == 1) {
-        let r = [[points[start][0], points[start][1]], [points[end][0], points[end][1]]];
-        return r;
-    }
     let dmax = -Infinity;
     let index = -1;
-
+    let v = new _Vector(points[end][0] - points[start][0], points[end][1] - points[start][1]);
+    v.normalize();
     for (let i = start + 1; i < end; i++) {
-        let dis = _perpendicularDistanceSquare(points[i], points[start], points[end]);
+        let dis = _perpendicularDistanceSquare(points[i], points[start], v);
         if (dis > dmax) {
             dmax = dis;
             index = i;
@@ -39,16 +40,13 @@ function douglasPeucker(points, epsilon = 0, start, end) {
  * 计算投影点到某线段的距离的平方
  * @param {Array} p 投影点
  * @param {Array} p1 线段起点
- * @param {Array} p2 线段末点
+ * @param {Array} v 线段单位向量
  */
-function _perpendicularDistanceSquare(p, p1, p2) {
-    let v1 = new _Vector(p2[0] - p1[0], p2[1] - p1[1]);
+function _perpendicularDistanceSquare(p, p1, v) {
     let v2 = new _Vector(p[0] - p1[0], p[1] - p1[1]);
-    v1.normalize();
-    let d = v2.dot(v1.x, v1.y);
-    v1.scale(d);
-    let x = p1[0] + v1.x;
-    let y = p1[1] + v1.y;
+    let d = v2.dot(v.x, v.y);
+    let x = p1[0] + v.x * d;
+    let y = p1[1] + v.y * d;
     let dx = x - p[0];
     let dy = y - p[1];
     return dx * dx + dy * dy;
@@ -58,7 +56,9 @@ function _perpendicularDistanceSquare(p, p1, p2) {
  * 方便计算创建的一个向量类。内部类
  */
 class _Vector {
-    constructor(x, y) { this.x = x, this.y = y }
+    constructor(x, y) {
+        this.x = x, this.y = y
+    }
 
     _length() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -70,13 +70,8 @@ class _Vector {
         this.y = this.y / l;
     }
 
-    scale(s) {
-        this.x *= s;
-        this.y *= s;
-    }
-
     dot(x, y) {
-        return this.x * x + this.y + y;
+        return this.x * x + this.y * y;
     }
 }
 export {
