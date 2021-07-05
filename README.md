@@ -25,6 +25,25 @@ import { douglasPeucker} from 'SOME_PATH/douglas-peucker.js';
 ...
 ```
 
+User can use ```smoothLines``` method to change the ```points``` array to bezier points array:
+```javascript
+import { douglasPeucker,smoothLines} from 'SOME_PATH/douglas-peucker.js';
+...
+
+    // The curve points array
+    let points = [.....];
+
+    let epsilon = 20;
+
+    // caculate and get the new points
+    let newPoints = douglasPeucker(points, epsilon); 
+
+    // smoothing...
+    let bps = smoothLines(newPoints);
+
+...
+```
+
 ## Method parameters
 ```javascript
 function douglasPeucker(points, epsilon, start, end)
