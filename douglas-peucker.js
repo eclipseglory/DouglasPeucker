@@ -44,6 +44,12 @@
     }
 }
 
+/**
+ * 这个方法来自：https://github.com/pshihn/bezier-points/blob/master/src/curve-to-bezier.ts
+ * @param {Array} pointsIn 
+ * @param {Nmber} curveTightness 
+ * @returns 
+ */
 function smoothLines(pointsIn, curveTightness = 0.3) {
     const len = pointsIn.length;
     if (len < 3) {
